@@ -1,44 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>PUBSUB</title>
-</head>
-<body>
-<!-- a place to record messages -->
-<div id="messages" class="container"></div>
-<!-- load a script -->
-<script type="module">
-	import { connect, StringCodec } from "./nats.js";
-
-// to create a connection to a nats-server:
-const nc = await connect({ servers: "ws://localhost:9222" });
-
-// create a codec
-const sc = StringCodec();
-// create a simple subscriber and iterate over messages
-// matching the subscription
-const sub = nc.subscribe("hello.*");
-(async () => {
-  for await (const m of sub) {
-    console.log(`[${sub.getProcessed()}]: ${sc.decode(m.data)}`);
-    //douche();
-  }
-})();
-
-nc.publish("hello", sc.encode("world"));
-nc.publish("hello", sc.encode("again"));
-
-function douche(){
-	console.log("DOUCHE")
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="utf-8">
+<style>
+canvas {
+    border:2px solid #000000;
+    background-color: #ffffff;
+    padding: 0;
+    margin: auto;
+    display: block;
 }
-// we want to insure that messages that are in flight
-// get processed, so we are going to drain the
-// connection. Drain is the same as close, but makes
-// sure that all messages in flight get seen
-// by the iterator. After calling drain on the connection
-// the connection closes.
-//await nc.drain();
+table, th, td {
+    border: 1px solid black;
+    font-size: 12px;
+    font-family: Arial , sans-serif;
+}
+
+</style>
+
+<script src='./public/game.js'></script>
+<script src='./public/food.js'></script>
+<script src='./public/gostuff.js'></script>
+<script src='./public/sensors.js'></script>
+
+<script>  
+
+var episode_knt = 0;
+var num_episodes = 0;
+var num_rovers = 30;
+var num_inputs = 20;
+var num_hidden = 20;
+var num_outputs = 8;
+
+console.log("num_roverss",num_rovers)
+var pause = false;
+rovers = [];
+foods = [];
+var num_foods = 8;
+width = 480
+height = 300
+
+
+function getRandomInt(min,max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function getRandomFloat(min,max) {
+    return 0.0 + (Math.random() * (max - min )) + min;
+}
+    
+       
+function startGame() {
+    WebsocketStart();
+    myGameArea.start();
+}
+ 
 </script>
+</head>
+<body onload="startGame()">
+<p>
+<center>
+<button onclick="javascript:myGameArea.stop()">stop</button>
+<button onclick="javascript:myGameArea.start()">start</button>
+</center>
+
 </body>
 </html>
+
