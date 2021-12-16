@@ -4,7 +4,7 @@ func mat_mult(a[]float64, b[][]float64) []float64 {
 	//a is from layer is 1 row by c columns
 	//b is from_to_weight_matrix is c rows  by x columns
 	//c is new_layer is 1 row  by x columns
-
+//duh	
 	var c []float64
 	to_len := len(b[0])
 	from_len := len(a)
