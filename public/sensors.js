@@ -1,4 +1,4 @@
-
+//duh
 Rover.prototype.make_sensors = function() {
 console.log("num sensors : ",this.num_sensors);
 
