@@ -7,29 +7,54 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
+//remember kids, Marshal only converts members of a struct if
+//the name is Capitalized.... 55 minutes on that problem...
+type Mess struct {
+	Msg_type  string
+	Positions [NUM_ROVERS][2]int
+}
+
+type Wall struct {
+	xy [2]int
+}
+
+type Arena struct {
+	Width  int
+	Height int
+	Food   [][2]int
+	Epochs int
+}
+
 type Team struct {
-	Num_rovers  int
-	Num_inputs  int
-	Num_hidden  int
-	Num_outputs int
-	Rovers      []Rover
+	Num_rovers int
+	Rovers     []Rover
+}
+
+type Brain struct {
+	seed  int64
+	sign  byte
+	iconn []byte
+	nconn [][]byte
 }
 
 type Rover struct {
-	Genome                []float64
-	Input_hidden_weights  [][]float64
-	Hidden_hidden_weights [][]float64
-	Hidden_output_weights [][]float64
-	Old_hidden_layer      []float64
-	Score                 int
+	brain       Brain
+	Xpos        int
+	Ypos        int
+	Sensor_data []byte
+	Fitness     int
+	Angle_index int
 }
 
-var team Team
-var rover Rover
+//var message_type int
 
+var rovers []Rover
+var arena Arena
+var num_episodes int
 var addr = flag.String("addr", "localhost:8081", "http service address")
 
 var upgrader = websocket.Upgrader{
@@ -47,6 +72,7 @@ func talk(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer c.Close()
+	//big loop... maybe
 	for {
 		mt, message, err := c.ReadMessage()
 		if err != nil {
@@ -54,43 +80,51 @@ func talk(w http.ResponseWriter, r *http.Request) {
 			break
 		} //end of if on message err
 
+		fmt.Println("MESSAGE TYPE: ", mt)
 		junk := string(message)
-//fmt.Println("JUNK: ",junk)
-		if strings.Contains(junk, "make_team") {
-			fmt.Println("MAKE TEAM!!")
-			jerr := json.Unmarshal(message, &team)
+		fmt.Println("ARENA DATA: ", junk)
+		if strings.Contains(junk, "make_arena") {
+			fmt.Println("MAKE ARENA!!")
+			jerr := json.Unmarshal(message, &arena)
 			if jerr != nil {
-				fmt.Println("error on team unmarshal")
+				fmt.Println("error on arena unmarshal")
+				os.Exit(3)
 			} //end of if on jerr
-			team.Rovers = make_rovers(team)
-			make_new_weights(team)
-		} //end of if on team
+			fmt.Println("ARENA WIDTH: ", arena.Width)
+			fmt.Println("ARENA HEIGHT: ", arena.Height)
+			fmt.Println("ARENA FOOD: ", arena.Food)
+			make_rovers()
+		} //end of if on arena
 
-		if strings.Contains(junk, "state") {
-			message = do_updates(team, message)
-			err = c.WriteMessage(mt, message)
-			if err != nil {
-				log.Println("write:", err)
-				break
-			} //end of if on write
-		}
-
-		if strings.Contains(junk, "num_episodes") {
-			fmt.Println("NUM EPISODES!!")
-			select_genomes(team)
-			make_new_weights(team)
-			//mutate_genomes(team);
-		}
-
-		outmap := make(map[string]string)
-		outmap["status"] = "ok"
-		message, err = json.Marshal(outmap)
-		err = c.WriteMessage(mt, message)
+		//ok now we just spew data to web
+		for {
+		var draw_message []byte
+		var draw_positions [NUM_ROVERS][2]int
+		draw_positions = do_updates(rovers)
+		fmt.Println("PAST DO UPDATES")
+		var mmm Mess
+		mmm.Msg_type = "positions"
+		mmm.Positions = draw_positions
+		draw_message, err = json.Marshal(mmm)
 		if err != nil {
-			log.Println("write:", err)
-			break
-		} //end of if on write
-	} //end of for loop
+			fmt.Println("bad angles Marshal")
+			os.Exit(7)
+		}
+
+		err = c.WriteMessage(mt, draw_message)
+		if err != nil {
+			log.Println("BAD DRAW MESSAGE:", err)
+			os.Exit(4)
+		} //end of if on write err
+		num_episodes += 1
+		if num_episodes > 100 {
+			select_brains(rovers)
+			mutate_brains(rovers)
+			num_episodes = 0
+		}
+	} //end of for loop around do_updates
+	} //end of for loop to receive and send messages
+
 } //end of talk
 
 func main() {

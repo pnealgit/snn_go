@@ -21,22 +21,15 @@ table, th, td {
 <script src='./public/game.js'></script>
 <script src='./public/food.js'></script>
 <script src='./public/gostuff.js'></script>
-<script src='./public/sensors.js'></script>
 
 <script>  
 
-var episode_knt = 0;
-var num_episodes = 0;
-var num_rovers = 30;
-var num_inputs = 20;
-var num_hidden = 20;
-var num_outputs = 8;
-
-console.log("num_roverss",num_rovers)
+NUM_ROVERS = 10;
+console.log("num_roverss",NUM_ROVERS)
 var pause = false;
-rovers = [];
-foods = [];
-var num_foods = 8;
+ROVERS = [];
+FOODS = [];
+NUM_FOODS = 8;
 width = 480
 height = 300
 
@@ -50,6 +43,7 @@ function getRandomFloat(min,max) {
     
        
 function startGame() {
+	console.log("START GAME")
     WebsocketStart();
     myGameArea.start();
 }

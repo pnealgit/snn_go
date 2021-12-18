@@ -1,13 +1,13 @@
 function reset_food_positions() {
-   for(var fnn=0; fnn <num_foods;fnn++) {
-         foods[fnn].reset_position();
+   for(var fnn=0; fnn <NUM_FOODS;fnn++) {
+         FOODS[fnn].reset_position();
    } //end of loop
 }
 
 
 function update_foods() {
-   for(var ik=0; ik <num_foods;ik++) {
-       foods[ik].update();
+   for(var ik=0; ik <NUM_FOODS;ik++) {
+       FOODS[ik].update();
    }
 }
  
@@ -35,7 +35,7 @@ function Food(x,y) {
 
 } //end of food function  
 
-function make_foods(num_foods) {
+function make_foods() {
  
     x = 0;
     y = 0;
@@ -47,13 +47,18 @@ function make_foods(num_foods) {
     h = height-100;
     r = 15; //radius of food
 
-    delta_radians = (2.0*Math.PI)*(1.0/num_foods)
+    delta_radians = (2.0*Math.PI)*(1.0/NUM_FOODS)
     fangle = 0;
-    for (var fknt =0;fknt<num_foods;fknt++) {
+    for (var fknt =0;fknt<NUM_FOODS;fknt++) {
         py = centery + circ_radius*Math.sin(fangle)+Math.random()*2.0
         px = centerx + circ_radius*Math.cos(fangle)+Math.random()*2.0
-        foods[fknt] = new Food(px,py);
+        FOODS[fknt] = new Food(px,py);
         fangle += delta_radians
+	ff = []
+	ff[0] = parseInt(px);
+	ff[1] = parseInt(py);
+    	FOODXY[fknt] = ff;
     }
+	console.log("FOODXY IN FOOD>JS",FOODXY)
 }//end of function make_foods
 
