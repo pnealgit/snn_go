@@ -8,11 +8,12 @@ func do_updates(rovers []Rover) [NUM_ROVERS][2]int {
 
 	//var err error
 	fmt.Println("IN DO UPDATES")
-	var sensor_data [NUM_NEURONS]byte
+	var sensor_data string
 	var min_index int
 	var new_angle_index int
 	var team_positions [NUM_ROVERS][2]int
 
+	//var sensor_data []bytes
 	for ir := 0; ir < NUM_ROVERS; ir++ {
 		sensor_data = get_sensor_data(rovers[ir])
 		min_index = think(rovers[ir].brain, sensor_data)

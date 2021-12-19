@@ -40,17 +40,18 @@ type Brain struct {
 	iconn []byte
 	nconn [][]byte
 }
-
+//as of Dec 19, the only sensor data I have
+//to hang on to are the end positions of each sensor
+//and that is only for drawing purposes
 type Rover struct {
 	brain       Brain
 	Xpos        int
 	Ypos        int
-	Sensor_data []byte
 	Fitness     int
 	Angle_index int
+	Sensor_data [NUM_SENSORS][4] int
 }
 
-//var message_type int
 
 var rovers []Rover
 var arena Arena

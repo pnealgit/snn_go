@@ -19,9 +19,12 @@ func getRandomInt(min int, max int) int {
 
 func mutate_brains(rovers []Rover) {
 	//I am not mutating sign here. Too drastic
-	fmt.Println("IN MUTATE BRAINS")
-	num_mutations := int(.2 * float64(NUM_NEURONS) * float64(NUM_NEURONS))
-
+	//fmt.Println("IN MUTATE BRAINS")
+	var num_mutations int
+	var nn  float64
+	nn =float64(NUM_NEURONS)
+	num_mutations = int(nn * nn/5.0)
+	//fmt.Println("NUM MUTATIONS: ",num_mutations)
 	for im := 4; im < NUM_ROVERS; im++ {
 		for k:=0;k<num_mutations;k++ {
 			ix := getRandomInt(0,NUM_NEURONS)

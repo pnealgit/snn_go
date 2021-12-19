@@ -15,6 +15,7 @@ func make_rovers()  {
 		rover.Xpos = getRandomInt(0,arena.Width)
 		rover.Ypos = getRandomInt(0,arena.Height)
 		rover.Angle_index = getRandomInt(0,9)
+
 		rovers = append(rovers, rover)
 	} //end of for loop on num_rovers
 	//return rovers
