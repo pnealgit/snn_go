@@ -14,6 +14,7 @@ const NUM_ROVERS  = 10
 var THRES = 3
 var LEAKING_CONSTANT  = 1
 var SETTLING_TIME = 20
+//e,ne,n,nw,w,sw,s,se
 var ANGLES_DX = [8]int{1, 1, 0, -1, -1, -1, 0, 1}
 var ANGLES_DY = [8]int{0, 1, 1, 1, 0, -1, -1, -1}
 var NUM_ANGLES = 8

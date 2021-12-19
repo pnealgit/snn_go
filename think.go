@@ -5,7 +5,7 @@ import (
 )
 
 func think(brain Brain, sensor_data_string string) int {
-	fmt.Println("IN THINK sensor_data: ", sensor_data_string)
+	//fmt.Println("IN THINK sensor_data: ", sensor_data_string)
 	//var new_angle_index byte
 	//new_angle_index = 0
 
@@ -51,7 +51,7 @@ func think(brain Brain, sensor_data_string string) int {
 
 	for epoch := 0; epoch < SETTLING_TIME; epoch++ {
 
-		for nindex := 0; nindex < NUM_NEURONS; nindex++ {
+		for nindex := 0; nindex < len(sensor_data); nindex++ {
 			memb[nindex] = 0
 			if outps[nindex] == 0 {
 				//not in refactory state
@@ -59,7 +59,7 @@ func think(brain Brain, sensor_data_string string) int {
 				//count from other neurons with positive or negative
 				var stuff int
 				stuff = 0
-				for n := 0; n < NUM_NEURONS; n++ {
+				for n := 0; n < len(sensor_data); n++ {
 					if sign == 1 {
 						stuff = int(outps[n] * nconn[nindex][n])
 					} else {

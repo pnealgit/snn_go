@@ -59,6 +59,6 @@ function make_foods() {
 	ff[1] = parseInt(py);
     	FOODXY[fknt] = ff;
     }
-	console.log("FOODXY IN FOOD>JS",FOODXY)
+//	console.log("FOODXY IN FOOD>JS",FOODXY)
 }//end of function make_foods
 

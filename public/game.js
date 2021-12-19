@@ -25,18 +25,14 @@ function WebsocketStart() {
     ws.onmessage = function(e) {
       	n = e.data.indexOf("position");
       	if (n != -1 ) {
-	 var response = JSON.parse(e.data)
-         positions = response.Positions
-	      if (ROVERS.length <= 0) {
-         	for (var pos=0;pos < response.Positions.length;pos++) {
-        		ROVERS[pos] = new Rover(response.Positions[pos]);
-    		}
-	      } //end of if on length
-         for (var pos=0;pos < response.Positions.length;pos++) {
-        	ROVERS[pos].x = response.Positions[pos][0];
-        	ROVERS[pos].y = response.Positions[pos][1];
-    	}
-	
+	 	var response = JSON.parse(e.data)
+         	positions = response.Positions
+		//console.log("RESPONSE POSITIONS: ",response.Positions)
+	      	if (ROVERS.length <= 0) {
+			make_new_rovers(response.Positions);
+	      	} else {
+			update_rovers(response.Positions)
+		}
       } //end of if found 'positions'
     } //endo of onmessage
 
@@ -76,7 +72,7 @@ function updateGameArea() {
        reset_food_positions();
 
     myGameArea.clear();
-    update_rovers();
+    draw_rovers();
     update_foods();
 } //end of updateGameArea
 
@@ -104,4 +100,14 @@ myGameArea = {
     } 
 }    //end of gamearea
 
-
+function make_new_rovers(positions) {
+	
+     for (var pos=0;pos < positions.length;pos++) {
+           ROVERS[pos] = new Rover(positions[pos]);
+     }
+}
+function update_rovers(positions) {
+    for (var pos=0;pos < positions.length;pos++) {
+    	ROVERS[pos].sensor_data = positions[pos];
+    }
+} //end of function

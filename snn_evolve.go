@@ -1,10 +1,7 @@
 package main
 
-//cross-entropy method optimisation
-
-
 import (
-	"fmt"
+	//"fmt"
 	"math/rand"
 )
 

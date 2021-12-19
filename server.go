@@ -15,7 +15,7 @@ import (
 //the name is Capitalized.... 55 minutes on that problem...
 type Mess struct {
 	Msg_type  string
-	Positions [NUM_ROVERS][2]int
+	Positions [NUM_ROVERS][8]int
 }
 
 type Wall struct {
@@ -49,7 +49,7 @@ type Rover struct {
 	Ypos        int
 	Fitness     int
 	Angle_index int
-	Sensor_data [NUM_SENSORS][4] int
+	Sensor_data [NUM_SENSORS][4]int
 }
 
 
@@ -100,12 +100,14 @@ func talk(w http.ResponseWriter, r *http.Request) {
 		//ok now we just spew data to web
 		for {
 		var draw_message []byte
-		var draw_positions [NUM_ROVERS][2]int
+		var draw_positions [NUM_ROVERS][8]int
 		draw_positions = do_updates(rovers)
 		fmt.Println("PAST DO UPDATES")
 		var mmm Mess
 		mmm.Msg_type = "positions"
 		mmm.Positions = draw_positions
+		fmt.Println("MMM: ",mmm)
+
 		draw_message, err = json.Marshal(mmm)
 		if err != nil {
 			fmt.Println("bad angles Marshal")
