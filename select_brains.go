@@ -32,7 +32,7 @@ func select_brains() {
 		rovers[ir].Dead = false
 		rovers[ir].Xpos = getRandomInt(20, arena.Width-20)
 		rovers[ir].Ypos = getRandomInt(20, arena.Height-20)
-
+		rovers[ir].Angle_index = getRandomInt(0,8)
 	}
 
 	//I hope this works. If brain is an array, than no problem

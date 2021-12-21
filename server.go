@@ -16,7 +16,7 @@ import (
 //the name is Capitalized.... 55 minutes on that problem...
 type Mess struct {
 	Msg_type  string
-	Positions [NUM_ROVERS][8]int
+	Positions [NUM_ROVERS][2]int
 	//Position [8]int
 }
 
@@ -101,7 +101,7 @@ func talk(w http.ResponseWriter, r *http.Request) {
 
 	//ok now we just spew data to web
 	var draw_message []byte
-	var draw_positions [NUM_ROVERS][8]int
+	var draw_positions [NUM_ROVERS][2]int
 	var mmm Mess
 	for try := 0; try < 100; try++ {
 		fmt.Println("TRY: ", try)

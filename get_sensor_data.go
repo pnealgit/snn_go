@@ -1,36 +1,38 @@
 package main
 
 import (
-	"fmt"
+//	"fmt"
 	"math"
 )
 
 func get_sensor_data(ir int) {
 	//the return is a vector of 1s and 0s
-//		var my_rover  Rover
-//		rovers[ir] = rovers[ir]
+
 	//gotta do it this way to avoid jumping over obstacles
 		wall := 0
 		var Xpos int
 		var Ypos int
 		var sensor_angle_index int
 		var dist int
-	for isensor := 0; isensor < NUM_SENSORS; isensor++ {
-		sensor_angle_index = get_sensor_angle_index(isensor, rovers[ir].Angle_index)
-		deltax := ANGLES_DX[sensor_angle_index]
-		deltay := ANGLES_DY[sensor_angle_index]
 		Xpos = rovers[ir].Xpos
 		Ypos = rovers[ir].Ypos
 		var zorro int
 		zorro = check_food_position(Xpos, Ypos)
 		if zorro == 7 {
-			rovers[ir].Fitness += 1
+			rovers[ir].Fitness += 5
 		}
+	for isensor := 0; isensor < NUM_SENSORS; isensor++ {
+
+		//sensor_angle_index = get_sensor_angle_index(isensor, rovers[ir].Angle_index)
+		sensor_angle_index = isensor;
+		deltax := ANGLES_DX[sensor_angle_index]
+		deltay := ANGLES_DY[sensor_angle_index]
+		Xpos = rovers[ir].Xpos
+		Ypos = rovers[ir].Ypos
 		zorro = check_wall_position(Xpos, Ypos)
 		if zorro > 0 {
 			rovers[ir].Dead = true
-			fmt.Println("IN GET_SENSOR ROVER IR IS DEAD ",ir)
-
+			//fmt.Println("IN GET_SENSOR ROVER IR IS DEAD ",ir)
 		}
 		wall = 0
 		for step := 0; step < SENSOR_LENGTH; step++ {
@@ -50,7 +52,8 @@ func get_sensor_data(ir int) {
 
 			wall = check_food_position(Xpos, Ypos)
 			if wall > 0 {
-				//rovers[ir].Fitness +=2; //get some for food
+				rovers[ir].Fitness +=1; //get some for food
+
 				break
 			}
 		} //end of step loop
@@ -103,18 +106,23 @@ func make_binary_sensor_data(ir int) string {
 			} else {
 				bsd = bsd + nothing
 			}
-			break
+			continue
 		}
+		//if junkf > .5*slf && junkf <= .8*slf {
 		if junkf > .5*slf {
 			bsd = bsd + soso
-			break
+			continue
 		}
-		if junkf > .15*slf {
+		//if junkf > .15*slf && junkf <= .5 {
+		if junkf > .15*slf  {
 			bsd = bsd + clos
-			break
+			continue
 		}
-		bsd = bsd + alert
+		//if junkf <= .15*slf {
+			bsd = bsd + alert
+		//}
 	}
+	//fmt.Println("IN BINARY STRIN: ",bsd)
 	return bsd
 }
 

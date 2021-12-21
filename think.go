@@ -1,11 +1,11 @@
 package main
 
 import (
-//	"fmt"
+	//"fmt"
 )
 
 func think(ir int, sensor_data_string string) int {
-
+//	fmt.Println("THINK SDATA STR: ",sensor_data_string)
 	var brain Brain
 	brain = rovers[ir].brain
 	var sensor_data []byte
@@ -89,11 +89,6 @@ func think(ir int, sensor_data_string string) int {
 			} else {
 				temp_outps[nindex] = 0
 			}
-
-			//leakage
-			//if memb[nindex] >= LEAKING_CONSTANT {
-			//	memb[nindex] -= LEAKING_CONSTANT
-			//}
 		}
 		//end of pass through all neurons
 
@@ -141,6 +136,48 @@ func think(ir int, sensor_data_string string) int {
 		max_value = sum
 		max_index = 2
 	}
+
+	for i := 24; i < 32; i++ {
+		sum += fire_knt[i]
+	}
+	if sum > max_value {
+		max_value = sum
+		max_index = 3
+	}
+	
+	for i := 32; i < 40; i++ {
+		sum += fire_knt[i]
+	}
+	if sum > max_value {
+		max_value = sum
+		max_index = 4
+	}
+	
+	for i := 40; i < 48; i++ {
+		sum += fire_knt[i]
+	}
+	if sum > max_value {
+		max_value = sum
+		max_index = 5
+	}
+	
+	for i := 48; i < 56; i++ {
+		sum += fire_knt[i]
+	}
+	if sum > max_value {
+		max_value = sum
+		max_index = 6
+	}
+	
+	for i := 56; i < 64; i++ {
+		sum += fire_knt[i]
+	}
+	if sum > max_value {
+		max_value = sum
+		max_index = 7
+	}
+
+
 
 	return max_index
 

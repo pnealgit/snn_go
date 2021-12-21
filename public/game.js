@@ -27,7 +27,6 @@ function WebsocketStart() {
       	if (n != -1 ) {
 	 	var response = JSON.parse(e.data)
          	positions = response.Positions
-		//console.log("RESPONSE POSITIONS: ",response.Positions)
 	      	if (ROVERS.length <= 0) {
 			make_new_rovers(response.Positions);
 	      	} else {
