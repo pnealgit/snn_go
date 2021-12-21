@@ -5,12 +5,9 @@ import (
 )
 
 func think(ir int, sensor_data_string string) int {
-	//fmt.Println("IN THINK sensor_data: ", sensor_data_string)
-	//var new_angle_index byte
-	//new_angle_index = 0
 
 	var brain Brain
-	brain =  rovers[ir].brain
+	brain = rovers[ir].brain
 	var sensor_data []byte
 	var sig byte
 	//could have called Atoi on this, but meh
@@ -55,8 +52,8 @@ func think(ir int, sensor_data_string string) int {
 	iconn := brain.iconn
 
 	for epoch := 0; epoch < SETTLING_TIME; epoch++ {
-		for i:=0;i<len(temp_outps);i++ {
-			outps[i] = temp_outps[i]  
+		for i := 0; i < len(temp_outps); i++ {
+			outps[i] = temp_outps[i]
 			//save what was done from last epoch
 			temp_outps[i] = 0
 		}
@@ -68,7 +65,7 @@ func think(ir int, sensor_data_string string) int {
 				//count from other neurons with positive or negative
 				for n := 0; n < len(sensor_data); n++ {
 					if sign[n] == 1 {
-						memb+= int(outps[n] * nconn[nindex][n])
+						memb += int(outps[n] * nconn[nindex][n])
 					} else {
 						memb -= int(outps[n] * nconn[nindex][n])
 					}
@@ -79,14 +76,14 @@ func think(ir int, sensor_data_string string) int {
 			} //end of not refactory
 			//fire or not !
 			//leakage
-			if memb>= LEAKING_CONSTANT {
+			if memb >= LEAKING_CONSTANT {
 				memb -= LEAKING_CONSTANT
 			}
 			r := getRandomInt(-2, 3)
 			if memb >= (THRES + r) {
-			//	fmt.Println("\nFIRED NEURON : ",nindex)
-			//	fmt.Println("MEMB ",memb)
-			//	fmt.Println("THRESHOLD WAS ",THRES+r)
+				//	fmt.Println("\nFIRED NEURON : ",nindex)
+				//	fmt.Println("MEMB ",memb)
+				//	fmt.Println("THRESHOLD WAS ",THRES+r)
 
 				temp_outps[nindex] = 1
 			} else {
@@ -118,10 +115,10 @@ func think(ir int, sensor_data_string string) int {
 	var max_index int
 	max_index = 1 //go straight if nothing happens;
 	var max_value int
-	max_value =0 
+	max_value = 0
 	sum := 0
 	//choose a direction based on fireknt
-	for i:=0;i<8;i++{
+	for i := 0; i < 8; i++ {
 		sum += fire_knt[i]
 	}
 	if sum > max_value {
@@ -129,7 +126,7 @@ func think(ir int, sensor_data_string string) int {
 		max_index = 0
 	}
 	sum = 0
-	for i:=8;i<16;i++{
+	for i := 8; i < 16; i++ {
 		sum += fire_knt[i]
 	}
 	if sum > max_value {
@@ -137,7 +134,7 @@ func think(ir int, sensor_data_string string) int {
 		max_index = 1
 	}
 	sum = 0
-	for i:=16;i<24;i++{
+	for i := 16; i < 24; i++ {
 		sum += fire_knt[i]
 	}
 	if sum > max_value {
@@ -145,8 +142,6 @@ func think(ir int, sensor_data_string string) int {
 		max_index = 2
 	}
 
-		
-	return max_index 
-	
+	return max_index
 
 } //end of think
