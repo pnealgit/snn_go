@@ -1,45 +1,50 @@
 package main
 import (
-	"time"
-	"math/rand"
+	//"time"
+	//"math/rand"
 //	"fmt"
 )
 
 func make_rovers()  {
-	rand.Seed(time.Now().UTC().UnixNano())
+	//rand.Seed(time.Now().UTC().UnixNano())
 	var rover Rover	
 	for i := 0; i < NUM_ROVERS; i++ {
-		brain_seed  := (time.Now().UnixNano())
-		rover.brain = make_brain(brain_seed)
+		rover.brain = make_brain()
 		rover.Fitness = 0
-		rover.Xpos = getRandomInt(0,arena.Width)
-		rover.Ypos = getRandomInt(0,arena.Height)
+		rover.Dead = false
+		//rover.Xpos = getRandomInt(0,arena.Width)
+		//rover.Ypos = getRandomInt(0,arena.Height)
+		rover.Xpos = getRandomInt(20,arena.Width-20)
+		rover.Ypos = getRandomInt(20,arena.Height-20)
 		rover.Angle_index = getRandomInt(0,8)
-
-		rovers = append(rovers, rover)
+		//array or slice
+		//rovers = append(rovers, rover)
+		rovers[i] =  rover
 	} //end of for loop on num_rovers
 	//return rovers
 } //end of make_rovers
 
-func make_brain(b_seed int64) Brain {
-	//fmt.Println("in make_brain")
-	rand.Seed(b_seed)
+func make_brain() Brain {
 	var brain Brain
-	brain.sign = byte(getRandomInt(0,2))
-	var iconn []byte
-	//fmt.Println("BEFORE ICONN NUM_NEURONS",NUM_NEURONS)
 	for i:=0;i<NUM_NEURONS;i++ {
-		iconn = append(iconn,1)   //fully connected on input
+		brain.sign[i] = byte(getRandomInt(0,2))
+	}
+	var iconn [NUM_NEURONS]byte
+	//fmt.Println("BEFORE ICONN NUM_NEURONS",NUM_NEURONS)
+	//fully connected on inputs
+	for i:=0;i<NUM_NEURONS;i++ {
+		iconn[i] = byte(i)
 	}
 	brain.iconn = iconn
-	var nconn  [][]byte
+	var nconn  [NUM_NEURONS][NUM_NEURONS]byte
 	//fmt.Println("doing nconn")
-	var junk []byte
+	//var junk []byte
 	for ix := 0;ix<NUM_NEURONS;ix++ {
 		for iy := 0;iy<NUM_NEURONS;iy++ {
-			junk = append(junk,byte(getRandomInt(0,2)))
+			//junk = append(junk,byte(getRandomInt(0,2)))
+			nconn[ix][iy] = byte(getRandomInt(0,2))
 		}
-		nconn = append(nconn,junk)
+		//nconn = append(nconn,junk)
 	}
 	//fmt.Println("past nconn")
 	brain.nconn = nconn

@@ -111,3 +111,4 @@ function update_rovers(positions) {
     	ROVERS[pos].sensor_data = positions[pos];
     }
 } //end of function
+

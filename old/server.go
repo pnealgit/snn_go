@@ -16,8 +16,8 @@ import (
 //the name is Capitalized.... 55 minutes on that problem...
 type Mess struct {
 	Msg_type  string
-	Positions [NUM_ROVERS][8]int
-	//Position [8]int
+	//Positions [NUM_ROVERS][8]int
+	Position [8]int
 }
 
 type Wall struct {
@@ -103,17 +103,21 @@ func talk(w http.ResponseWriter, r *http.Request) {
 
 	//ok now we just spew data to web
 	var draw_message []byte
-	var draw_positions [NUM_ROVERS][8]int
+	var draw_position [8]int
 	fmt.Println("PAST DO UPDATES")
 	var mmm Mess
 	for try:=0;try< 100;try++ {
 		fmt.Println("TRY: ",try)
-		for num_steps:=0;num_steps<NUM_MAX_STEPS;num_steps++  {
-			for ir:=0;ir<NUM_ROVERS;ir++ {
-				draw_positions = do_update()
+		for ir:=0;ir<NUM_ROVERS;ir++ {
+			for num_steps:=0;num_steps<NUM_MAX_STEPS;num_steps++  {
+				if rovers[ir].Dead {
+					break
+				}
+				time.Sleep(10*time.Millisecond)
+				draw_position = do_update(ir)
 				//fmt.Println("PAST DO UPDATES")
-				mmm.Msg_type = "positions"
-				mmm.Positions = draw_positions
+				mmm.Msg_type = "position"
+				mmm.Position = draw_position
 				draw_message, err = json.Marshal(mmm)
 				if err != nil {
 					fmt.Println("bad angles Marshal")
@@ -125,9 +129,9 @@ func talk(w http.ResponseWriter, r *http.Request) {
 					log.Println("BAD DRAW MESSAGE:", err)
 					os.Exit(4)
 				} //end of if on write err
-			} //end of loop on ir
-				time.Sleep(5*time.Millisecond)
-		} //loop on num_steps
+			} //loop on num_steps
+			fmt.Println("END OF IR: ",ir," TRY: ",try)
+		} //end of loop on ir
 		select_brains()
 	}//end of try loop
 	fmt.Println("END OF TRY LOOP")

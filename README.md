@@ -21,4 +21,6 @@ December 18, 2021 - Finally got the arena data transferred over from js to go
 	6. Stick in controls so no leaving arena
 	7. Running really fast before serious stuff happens
 
+December 20, 2021 - Still couldn't get it to work. Dropping down to draw
+	serially. That is , only 1 rover on the screen at a time
 

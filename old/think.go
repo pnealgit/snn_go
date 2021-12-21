@@ -1,16 +1,14 @@
 package main
 
 import (
-//	"fmt"
+	//"fmt"
 )
 
-func think(ir int, sensor_data_string string) int {
+func think(brain Brain, sensor_data_string string) int {
 	//fmt.Println("IN THINK sensor_data: ", sensor_data_string)
 	//var new_angle_index byte
 	//new_angle_index = 0
 
-	var brain Brain
-	brain =  rovers[ir].brain
 	var sensor_data []byte
 	var sig byte
 	//could have called Atoi on this, but meh
@@ -37,7 +35,7 @@ func think(ir int, sensor_data_string string) int {
 	var temp_outps [NUM_NEURONS]byte
 	var memb int //because memb can go negative
 	var outps [NUM_NEURONS]byte
-	var fire_knt [NUM_NEURONS]int
+	var fire_knt [NUM_NEURONS]byte
 	var inps []byte
 
 	for k := 0; k < NUM_NEURONS; k++ {
@@ -101,52 +99,37 @@ func think(ir int, sensor_data_string string) int {
 		//end of pass through all neurons
 
 		//fire_knt is used to choose what sensor to go with
-		for k := 0; k < NUM_NEURONS; k++ {
-			fire_knt[k] += int(temp_outps[k])
+		for k := 0; k < 4; k++ {
+			fire_knt[0] += temp_outps[k]
 		}
+		for k := 4; k < 8; k++ {
+			fire_knt[1] += temp_outps[k]
+		}
+		for k := 8; k < NUM_NEURONS; k++ {
+			fire_knt[2] += temp_outps[k]
+		}
+
 		//#save outps for refactory
 		for k := 0; k < NUM_NEURONS; k++ {
 			outps[k] = temp_outps[k]
 			temp_outps[k] = 0
 		}
-		//fmt.Println("\nAT END")
-		//fmt.Println("OUTPS     : ",outps)
-		//fmt.Println("TEMP_OUTPS: ",temp_outps)
-
 	} //end of settling_time loop (epochs)
 
-	var max_index int
-	max_index = 1 //go straight if nothing happens;
-	var max_value int
-	max_value =0 
-	sum := 0
-	//choose a direction based on fireknt
-	for i:=0;i<8;i++{
-		sum += fire_knt[i]
-	}
-	if sum > max_value {
-		max_value = sum
-		max_index = 0
-	}
-	sum = 0
-	for i:=8;i<16;i++{
-		sum += fire_knt[i]
-	}
-	if sum > max_value {
-		max_value = sum
-		max_index = 1
-	}
-	sum = 0
-	for i:=16;i<24;i++{
-		sum += fire_knt[i]
-	}
-	if sum > max_value {
-		max_value = sum
-		max_index = 2
+	var min_index int
+	min_index = 1 //go straight if nothing happens;
+	var min_value int
+	min_value = 99
+
+	//choose a direction based on sensor.
+	for i := 0; i < NUM_SENSORS; i++ {
+		if fire_knt[i] <= byte(min_value) {
+			min_value = int(fire_knt[i])
+			min_index = i
+		}
+		fire_knt[i] = 0
 	}
 
-		
-	return max_index 
-	
+	return min_index
 
 } //end of think

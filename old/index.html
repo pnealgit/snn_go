@@ -24,15 +24,17 @@ table, th, td {
 
 <script>  
 
-NUM_ROVERS = 10;
+NUM_ROVERS = 1;
+NUM_SENSORS = 3
 console.log("num_roverss",NUM_ROVERS)
 var pause = false;
 ROVERS = [];
 FOODS = [];
 NUM_FOODS = 8;
+ROVER = {}
 width = 480
 height = 300
-NUM_SENSORS = 3;
+
 
 function getRandomInt(min,max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -60,4 +62,6 @@ function startGame() {
 
 </body>
 </html>
+
+
 

@@ -52,6 +52,9 @@ function make_foods() {
     for (var fknt =0;fknt<NUM_FOODS;fknt++) {
         py = centery + circ_radius*Math.sin(fangle)+Math.random()*2.0
         px = centerx + circ_radius*Math.cos(fangle)+Math.random()*2.0
+	    px = getRandomInt(30,width-30)
+	    py = getRandomInt(30,height-30)
+
         FOODS[fknt] = new Food(px,py);
         fangle += delta_radians
 	ff = []

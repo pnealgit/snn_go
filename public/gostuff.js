@@ -1,15 +1,15 @@
 function Rover(xy) {
-	console.log("XY IN ROVER: ",xy)
+	//console.log("XY IN ROVER: ",xy)
 	//start in the middle
     this.r = 10;
     this.sensor_data = xy;
-    console.log("SENSOR DATA IN NEW: ",this.sensor_data)
+    //console.log("SENSOR DATA IN NEW: ",this.sensor_data)
 
     this.draw = function() {
-	    console.log("SENSOR DATA XY: ",this.sensor_data)
+//	    console.log("SENSOR DATA XY: ",this.sensor_data)
 	x = this.sensor_data.shift()
 	y = this.sensor_data.shift()
-	    console.log("x,y:",x,y);
+	    //console.log("x,y:",x,y);
         ctx = myGameArea.context;
         ctx.beginPath();
         ctx.arc(x,y, this.r, 0, 2 * Math.PI);
@@ -74,4 +74,3 @@ Rover.prototype.reset_position = function() {
     this.angle = junk * Math.PI / 2;
     this.velocity = 2.0;
 }
-

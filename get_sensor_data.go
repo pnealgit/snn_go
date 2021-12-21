@@ -5,10 +5,10 @@ import (
 	"math"
 )
 
-func get_sensor_data(my_rover Rover) Rover {
-	fmt.Println("SENSOR LENGTH: ",SENSOR_LENGTH);
+func get_sensor_data(ir int) {
 	//the return is a vector of 1s and 0s
-
+//		var my_rover  Rover
+//		rovers[ir] = rovers[ir]
 	//gotta do it this way to avoid jumping over obstacles
 		wall := 0
 		var Xpos int
@@ -16,22 +16,30 @@ func get_sensor_data(my_rover Rover) Rover {
 		var sensor_angle_index int
 		var dist int
 	for isensor := 0; isensor < NUM_SENSORS; isensor++ {
-		sensor_angle_index = get_sensor_angle_index(isensor, my_rover.Angle_index)
-		fmt.Println("SENSOR ROVER ANGLE INDEX: ",sensor_angle_index,my_rover.Angle_index)
+		sensor_angle_index = get_sensor_angle_index(isensor, rovers[ir].Angle_index)
 		deltax := ANGLES_DX[sensor_angle_index]
 		deltay := ANGLES_DY[sensor_angle_index]
-		fmt.Println("DELTAX,Y: ",deltax,deltay)
-		Xpos = my_rover.Xpos
-		Ypos = my_rover.Ypos
+		Xpos = rovers[ir].Xpos
+		Ypos = rovers[ir].Ypos
+		var zorro int
+		zorro = check_food_position(Xpos, Ypos)
+		if zorro == 7 {
+			rovers[ir].Fitness += 1
+		}
+		zorro = check_wall_position(Xpos, Ypos)
+		if zorro > 0 {
+			rovers[ir].Dead = true
+			fmt.Println("IN GET_SENSOR ROVER IR IS DEAD ",ir)
+
+		}
 		wall = 0
 		for step := 0; step < SENSOR_LENGTH; step++ {
 			Xpos += deltax
 			Ypos += deltay
-			fdx := float64(Xpos - my_rover.Xpos)
-			fdy := float64(Ypos - my_rover.Ypos)
+			fdx := float64(Xpos - rovers[ir].Xpos)
+			fdy := float64(Ypos - rovers[ir].Ypos)
 			dist = int(math.Hypot(fdx, fdy))
 			if dist >= SENSOR_LENGTH {
-				fmt.Println("DIST: ",dist)
 				dist = SENSOR_LENGTH
 				break
 			}
@@ -42,23 +50,22 @@ func get_sensor_data(my_rover Rover) Rover {
 
 			wall = check_food_position(Xpos, Ypos)
 			if wall > 0 {
+				//rovers[ir].Fitness +=2; //get some for food
 				break
 			}
 		} //end of step loop
-			my_rover.Sensor_data[isensor][0] = Xpos
-			my_rover.Sensor_data[isensor][1] = Ypos
-			my_rover.Sensor_data[isensor][2] = wall
-			my_rover.Sensor_data[isensor][3] = dist
+			rovers[ir].Sensor_data[isensor][0] = Xpos
+			rovers[ir].Sensor_data[isensor][1] = Ypos
+			rovers[ir].Sensor_data[isensor][2] = wall
+			rovers[ir].Sensor_data[isensor][3] = dist
 	} //end of isensor loop
-	fmt.Println("return get_sensor_data rover SENSOR_DATA: ",my_rover.Sensor_data)
 
-	return my_rover
+	rovers[ir] = rovers[ir]
 }
 
-func make_binary_sensor_data(my_rover Rover) string {
-
-	fmt.Println("in make binary : ",my_rover.Sensor_data)
-
+func make_binary_sensor_data(ir int) string {
+	//fmt.Println("in make binary : ",rovers[ir].Sensor_data)
+	
 	//knt := 0
 	//obstacles
 	nothing := "0000"
@@ -76,7 +83,7 @@ func make_binary_sensor_data(my_rover Rover) string {
 
 	//string contains 3 groups containing a type code and a distance code
 	for i := 0; i < NUM_SENSORS; i++ {
-		otype := my_rover.Sensor_data[i][2]
+		otype := rovers[ir].Sensor_data[i][2]
 		if otype == 0 {
 			bsd = bsd + nothing
 		}
@@ -87,7 +94,7 @@ func make_binary_sensor_data(my_rover Rover) string {
 			bsd = bsd + eats
 		}
 
-		dist := my_rover.Sensor_data[i][3]
+		dist := rovers[ir].Sensor_data[i][3]
 		junkf := float64(dist)
 		slf := float64(SENSOR_LENGTH)
 		if junkf > .8*slf {
@@ -108,7 +115,6 @@ func make_binary_sensor_data(my_rover Rover) string {
 		}
 		bsd = bsd + alert
 	}
-
 	return bsd
 }
 

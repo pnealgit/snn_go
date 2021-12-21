@@ -31,11 +31,3 @@ func mutate_brains(rovers []Rover) {
 	} //end of loop on num_rovers
 } //end of mutate func
 
-// FitnessSorter sorts rovers by score
-type FitnessSorter []Rover
-
-func (a FitnessSorter) Len() int           { return len(a) }
-func (a FitnessSorter) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a FitnessSorter) Less(i, j int) bool { return a[i].Fitness > a[j].Fitness }
-
-

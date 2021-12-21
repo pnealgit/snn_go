@@ -1,0 +1,38 @@
+function Rover(xy) {
+	//console.log("XY IN ROVER: ",xy)
+    this.r = 10;
+    this.sensor_data = xy;
+    //console.log("SENSOR DATA IN NEW: ",this.sensor_data)
+}
+//end of Rover function
+
+function draw_rover(ROVER) {
+//	console.log("ROVER TO DRAW",ROVER)
+        x = ROVER.sensor_data[0];
+        y = ROVER.sensor_data[1];
+        ctx = myGameArea.context;
+        ctx.beginPath();
+        ctx.arc(x,y, ROVER.r, 0, 2 * Math.PI);
+        ctx.fillStyle = "red";
+        ctx.fill();
+        ctx.beginPath();
+        ctx.strokeStyle = '#000000';
+        ctx.stroke();
+        ctx.closePath();
+
+            knt = 2;
+              for(i =0 ;i<NUM_SENSORS;i++) {
+                xp = ROVER.sensor_data[knt]
+                knt++;
+                yp = ROVER.sensor_data[knt];
+                knt++;
+                ctx.beginPath()
+                ctx.strokeStyle = '#000000';
+                ctx.moveTo(x,y);
+                ctx.lineTo(xp,yp);
+                ctx.stroke();
+                ctx.closePath();
+
+	}//end of loop on sensors
+} //end of function
+
