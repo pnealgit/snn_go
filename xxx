@@ -1,5 +1,8 @@
 package main
 
+//binary group size
+var BGS = 4
+
 const NUM_SENSORS = 3
 
 var SENSOR_LENGTH = 200
@@ -8,7 +11,7 @@ var SENSOR_LENGTH = 200
 //4 digits for distance code
 //4 digits for type code
 //so for now NUM_NEURONS should equal 24
-
+//const NUM_NEURONS = 2*NUM_SENSORS*BGS
 const NUM_NEURONS = 24
 const NUM_ROVERS = 30
 
