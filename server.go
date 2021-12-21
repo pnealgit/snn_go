@@ -31,13 +31,13 @@ type Arena struct {
 	Epochs int
 }
 
-
 type Brain struct {
 	seed  int64
 	sign  [NUM_NEURONS]byte
 	iconn [NUM_NEURONS]byte
 	nconn [NUM_NEURONS][NUM_NEURONS]byte
 }
+
 //as of Dec 19, the only sensor data I have
 //to hang on to are the end positions of each sensor
 //and that is only for drawing purposes
@@ -48,10 +48,8 @@ type Rover struct {
 	Fitness     int
 	Angle_index int
 	Sensor_data [NUM_SENSORS][4]int
-	Dead		bool
-
+	Dead        bool
 }
-
 
 var rovers [NUM_ROVERS]Rover
 var arena Arena
@@ -104,14 +102,12 @@ func talk(w http.ResponseWriter, r *http.Request) {
 	//ok now we just spew data to web
 	var draw_message []byte
 	var draw_positions [NUM_ROVERS][8]int
-	fmt.Println("PAST DO UPDATES")
 	var mmm Mess
-	for try:=0;try< 100;try++ {
-		fmt.Println("TRY: ",try)
-		for num_steps:=0;num_steps<NUM_MAX_STEPS;num_steps++  {
-			for ir:=0;ir<NUM_ROVERS;ir++ {
+	for try := 0; try < 100; try++ {
+		fmt.Println("TRY: ", try)
+		for num_steps := 0; num_steps < NUM_MAX_STEPS; num_steps++ {
+			for ir := 0; ir < NUM_ROVERS; ir++ {
 				draw_positions = do_update()
-				//fmt.Println("PAST DO UPDATES")
 				mmm.Msg_type = "positions"
 				mmm.Positions = draw_positions
 				draw_message, err = json.Marshal(mmm)
@@ -126,10 +122,10 @@ func talk(w http.ResponseWriter, r *http.Request) {
 					os.Exit(4)
 				} //end of if on write err
 			} //end of loop on ir
-				time.Sleep(5*time.Millisecond)
+			time.Sleep(5 * time.Millisecond)
 		} //loop on num_steps
 		select_brains()
-	}//end of try loop
+	} //end of try loop
 	fmt.Println("END OF TRY LOOP")
 	os.Exit(0)
 } //end of talk
