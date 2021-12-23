@@ -1,7 +1,7 @@
 package main
 
 const NUM_SENSORS = 8
-var SENSOR_LENGTH = 120 
+var SENSOR_LENGTH = 200 
 
 //gotta have 1 neuron per binary digit
 //4 digits for distance code
@@ -9,10 +9,10 @@ var SENSOR_LENGTH = 120
 //so for now NUM_NEURONS should equal 24
 
 //NUM_SENSORS * 4 * 4
-const NUM_NEURONS = 64
-const NUM_ROVERS = 10
+const NUM_NEURONS = 16
+const NUM_ROVERS = 20
 
-var THRES = 3
+var THRES = 8
 var LEAKING_CONSTANT = 1
 var SETTLING_TIME = 20
 

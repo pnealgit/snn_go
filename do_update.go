@@ -8,58 +8,23 @@ func do_update() [NUM_ROVERS][2]int {
 
 	//var err error
 	var binary_sensor_data string
-	var max_index int
-	var new_angle_index int
+	//var max_index int
 	var team_positions [NUM_ROVERS][2]int
 
 	for ir := 0; ir < NUM_ROVERS; ir++ {
+		if rovers[ir].Dead 		{
+			continue
+		}
 		get_sensor_data(ir)
 		binary_sensor_data = make_binary_sensor_data(ir)
-		max_index = think(ir, binary_sensor_data)
+		think(ir, binary_sensor_data)
+		
+		rovers[ir].Vel_x += rovers[ir].Accel_x
+		rovers[ir].Vel_y += rovers[ir].Accel_y
 
-		//start east go counterclockwise
-		//sensors go from left to right 0-2
-		new_angle_index = rovers[ir].Angle_index
-		if max_index == 0 {
-			new_angle_index = new_angle_index + 1
-		}
-		if new_angle_index > NUM_ANGLES-1 {
-			new_angle_index = 0
-		}
-		if max_index == 1 {
-			//do nothing. Just a straight ahead
-		}
+		rovers[ir].Xpos += rovers[ir].Vel_x
+		rovers[ir].Ypos += rovers[ir].Vel_y
 
-		if max_index == 2 {
-			if new_angle_index > 0 {
-				new_angle_index = new_angle_index - 1
-			} else {
-				new_angle_index = NUM_ANGLES - 1
-			}
-		}
-
-		//why is this done.. reward for going straight
-		if new_angle_index == rovers[ir].Angle_index && !rovers[ir].Dead 		{
-			rovers[ir].Fitness += 1 //go straight
-		}
-		if !rovers[ir].Dead 		{
-			rovers[ir].Fitness += 1 //for staying alive
-		}
-		deltax := ANGLES_DX[new_angle_index]
-		deltay := ANGLES_DY[new_angle_index]
-
-		x := rovers[ir].Xpos + deltax
-		y := rovers[ir].Ypos + deltay
-
-		if x<= 1||y<= 1|| x >= arena.Width-1 || y >= arena.Height-1 {
-			//new_angle_index = change_direction(new_angle_index)
-			//do nothing
-		} else {
-
-			rovers[ir].Angle_index = new_angle_index
-			rovers[ir].Xpos += ANGLES_DX[new_angle_index]
-			rovers[ir].Ypos += ANGLES_DY[new_angle_index]
-		}
 		//for dumping back to javascript
 		team_positions[ir][0] = rovers[ir].Xpos
 		team_positions[ir][1] = rovers[ir].Ypos

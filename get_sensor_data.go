@@ -29,10 +29,12 @@ func get_sensor_data(ir int) {
 		deltay := ANGLES_DY[sensor_angle_index]
 		Xpos = rovers[ir].Xpos
 		Ypos = rovers[ir].Ypos
-		zorro = check_wall_position(Xpos, Ypos)
-		if zorro > 0 {
-			rovers[ir].Dead = true
-			//fmt.Println("IN GET_SENSOR ROVER IR IS DEAD ",ir)
+		if !rovers[ir].Dead {
+			zorro = check_wall_position(Xpos, Ypos)
+			if zorro > 0 {
+				rovers[ir].Dead = true
+				//fmt.Println("GET_SENSOR ROVER IR IS DEAD ",ir)
+			}
 		}
 		wall = 0
 		for step := 0; step < SENSOR_LENGTH; step++ {
@@ -71,16 +73,22 @@ func make_binary_sensor_data(ir int) string {
 	
 	//knt := 0
 	//obstacles
-	nothing := "0000"
-	no_go := "0001"
-	eats := "0011"
+	//hmmm lets just do good/bad on wall/food
+	//no distances
+	good := "11"
+	bad  := "00"
+	zip  := "01"
+	/*
+	nothing := "0001"
+	no_go := "0011"
+	eats := "1111"
 
 	//distances
 	far := "1000"
 	soso := "1001"
 	clos := "1011" //close is a reserved word
 	alert := "1011"
-
+	*/
 	var bsd string
 	bsd = ""
 
@@ -88,15 +96,16 @@ func make_binary_sensor_data(ir int) string {
 	for i := 0; i < NUM_SENSORS; i++ {
 		otype := rovers[ir].Sensor_data[i][2]
 		if otype == 0 {
-			bsd = bsd + nothing
+		//	bsd = bsd + nothing
+			bsd = bsd + zip
 		}
 		if otype > 0 && otype < 7 {
-			bsd = bsd + no_go
+			bsd = bsd + bad
 		}
 		if otype == 7 {
-			bsd = bsd + eats
+			bsd = bsd + good
 		}
-
+/*
 		dist := rovers[ir].Sensor_data[i][3]
 		junkf := float64(dist)
 		slf := float64(SENSOR_LENGTH)
@@ -121,25 +130,27 @@ func make_binary_sensor_data(ir int) string {
 		//if junkf <= .15*slf {
 			bsd = bsd + alert
 		//}
+	*/
 	}
+
 	//fmt.Println("IN BINARY STRIN: ",bsd)
 	return bsd
 }
 
 func check_wall_position(xp int, yp int) int {
 
-	if yp < 0 {
+	if yp <= 1 {
 		return 1
 	}
 
-	if yp > arena.Height {
+	if yp >= arena.Height-1 {
 		return 2
 	}
 
-	if xp < 0 {
+	if xp <= 1 {
 		return 3
 	}
-	if xp > arena.Width {
+	if xp >= arena.Width-1 {
 		return 4
 	}
 	return 0

@@ -46,7 +46,10 @@ type Rover struct {
 	Xpos        int
 	Ypos        int
 	Fitness     int
-	Angle_index int
+	Vel_x		int
+	Vel_y		int
+	Accel_x		int
+	Accel_y		int
 	Sensor_data [NUM_SENSORS][4]int
 	Dead        bool
 }
@@ -106,8 +109,19 @@ func talk(w http.ResponseWriter, r *http.Request) {
 	for try := 0; try < 100; try++ {
 		fmt.Println("TRY: ", try)
 		for num_steps := 0; num_steps < NUM_MAX_STEPS; num_steps++ {
-			for ir := 0; ir < NUM_ROVERS; ir++ {
 				draw_positions = do_update()
+				dead_knt := 0
+        			for ix:= 0;ix<NUM_ROVERS;ix++ {
+                			if rovers[ix].Dead {
+                        			dead_knt += 1
+                			}
+				}
+				if dead_knt >= NUM_ROVERS {
+					dead_knt = 0
+					//fmt.Println("DEAD KNT >= NUM_ROVERS")
+					break
+				}
+
 				mmm.Msg_type = "positions"
 				mmm.Positions = draw_positions
 				draw_message, err = json.Marshal(mmm)
@@ -121,7 +135,6 @@ func talk(w http.ResponseWriter, r *http.Request) {
 					log.Println("BAD DRAW MESSAGE:", err)
 					os.Exit(4)
 				} //end of if on write err
-			} //end of loop on ir
 			time.Sleep(5 * time.Millisecond)
 		} //loop on num_steps
 		select_brains()

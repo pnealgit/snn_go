@@ -30,11 +30,18 @@ func select_brains() {
 	for ir := 0; ir < NUM_ROVERS; ir++ {
 		rovers[ir].Fitness = 0
 		rovers[ir].Dead = false
-		rovers[ir].Xpos = getRandomInt(20, arena.Width-20)
-		rovers[ir].Ypos = getRandomInt(20, arena.Height-20)
-		rovers[ir].Angle_index = getRandomInt(0,8)
+		//rovers[ir].Xpos = getRandomInt(20, arena.Width-20)
+		//rovers[ir].Ypos = getRandomInt(20, arena.Height-20)
+		rovers[ir].Xpos = arena.Width/2
+		rovers[ir].Ypos = arena.Height/2
+		rovers[ir].Accel_x = getRandomInt(-1,2)
+		rovers[ir].Accel_y = getRandomInt(-1,2)
+		rovers[ir].Vel_x = getRandomInt(-1,2)
+		rovers[ir].Vel_y = getRandomInt(-1,2)
+
 	}
 
+	//HOPE ! HAHAHaaa
 	//I hope this works. If brain is an array, than no problem
 	//If brain is a slice, got problems. Because the brain copy
 	//is the same as the brain it was copied from (*pointer stuff)
@@ -42,14 +49,19 @@ func select_brains() {
 
 	//var test_brain Brain
 	//test_brain = rovers[NUM_ROVERS-1].brain
-	elite_cut := int(float64(NUM_ROVERS) * .3)
+	elite_cut := int(float64(NUM_ROVERS) * .2)
 	//elite_cut = 1
 	for ib := elite_cut; ib < NUM_ROVERS; ib++ {
 		//old_idx := getRandomInt(0,elite_cut)
 		//rovers[ib].brain = rovers[old_idx].brain
+		bam := getRandomInt(0,elite_cut)
 		c := [NUM_NEURONS][NUM_NEURONS]byte{}
-		c = rovers[0].brain.nconn
+		c = rovers[bam].brain.nconn
 		rovers[ib].brain.nconn = c
+
+		sig := [NUM_NEURONS]byte{}
+		sig = rovers[bam].brain.sign
+		rovers[ib].brain.sign = sig
 	}
 
 	mutate_brains(elite_cut)
@@ -73,7 +85,7 @@ func mutate_brains(elite_cut int) {
 	var num_mutations int
 	var nn float64
 	nn = float64(NUM_NEURONS)
-	num_mutations = int(nn * nn / 10.0)
+	num_mutations = int(nn * nn / 5.0)
 	//fmt.Println("NUM MUTATIONS: ",num_mutations)
 	for im := elite_cut; im < NUM_ROVERS; im++ {
 		for k := 0; k < num_mutations; k++ {
